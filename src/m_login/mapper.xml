@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="manager">
+ <!--
+ 	id는 중복안됨, 반드시 존재해야 한다. 
+	<select id="" resultType="" parameterType=""></select>	
+	<select id="" resultType=""></select>	
+	<update id="" parameterType=""></update>	
+	<insert id="" parameterType=""></insert>	
+	<delete id="" parameterType=""></delete>
+ -->
+  
+ 	<insert id="orderIns" parameterType="m_login.KioskorderVO">
+ 		insert into kioskorder(order_idx, order_date, order_no, order_list, phone, total, takeaway) 
+ 			values (kioskorder_seq.nextval, TO_DATE(#{order_date}, 'YYYY/MM/DD HH24:MI:SS'), #{order_no}, #{order_list}, #{phone}, #{total}, #{takeaway})
+ 	</insert>
+ 
+ 	<select id="orderList" parameterType="m_search.SearchVO" resultType="m_login.KioskorderVO">
+ 		select * from kioskorder 
+ 		where order_date between TO_DATE(#{start_date},'YYYY/MM/DDHH24:MI:SS') and TO_DATE(#{end_date},'YYYY/MM/DDHH24:MI:SS') 
+ 		order by order_idx
+ 	</select>
+ 	
+ 	<select id="orderCnt" parameterType="m_search.SearchVO" resultType="int">
+ 		select count(*) from kioskorder 
+ 		where order_date between TO_DATE(#{start_date},'YYYY/MM/DDHH24:MI:SS') and TO_DATE(#{end_date},'YYYY/MM/DDHH24:MI:SS')  
+ 	</select>
+ 	
+ 	<insert id="salesnstockIns" parameterType="m_dashboard.SalesNStockVO">
+ 		insert into salesnstock (sales_idx, sales_date, dataType, day_total, 
+ 		                         c1_m101, c1_m102, c1_m103, c1_m104, c1_m105, c1_m106, c1_m107, c1_m108,
+ 		                         c2_m201, c2_m202, c2_m203, c2_m204, c2_m205, c2_m206, c2_m207, c2_m208, 
+ 		        				 c3_m301, c3_m302, c3_m303, c3_m304, c3_m305, c3_m306, c3_m307, c3_m308, 
+ 		        				 c4_m401, c4_m402, c4_m403, c4_m404, c4_m405, c4_m406, c4_m407, c4_m408, 
+ 		        				 c5_m501, c5_m502, c5_m503, c5_m504, c5_m505, c5_m506, c5_m507, c5_m508
+ 		                         ) 
+ 		values (salesnstock_seq.nextval, sysdate, #{dataType}, #{day_total}, 
+ 		        #{c1_m101}, #{c1_m102}, #{c1_m103}, #{c1_m104}, #{c1_m105}, #{c1_m106}, #{c1_m107}, #{c1_m108}, 
+ 		        #{c2_m201}, #{c2_m202}, #{c2_m203}, #{c2_m204}, #{c2_m205}, #{c2_m206}, #{c2_m207}, #{c2_m208}, 
+ 		        #{c3_m301}, #{c3_m302}, #{c3_m303}, #{c3_m304}, #{c3_m305}, #{c3_m306}, #{c3_m307}, #{c3_m308}, 
+ 		        #{c4_m401}, #{c4_m402}, #{c4_m403}, #{c4_m404}, #{c4_m405}, #{c4_m406}, #{c4_m407}, #{c4_m408}, 
+ 		        #{c5_m501}, #{c5_m502}, #{c5_m503}, #{c5_m504}, #{c5_m505}, #{c5_m506}, #{c5_m507}, #{c5_m508} 
+ 		        )
+ 	</insert>
+ 	
+ 	<select id="salesnstockList" parameterType="Map" resultType="m_dashboard.SalesNStockVO">
+ 		select * from salesnstock 
+ 		where dataType=#{dataType} and sales_date between TO_DATE(#{start_date},'YYYY/MM/DDHH24:MI:SS') and TO_DATE(#{end_date},'YYYY/MM/DDHH24:MI:SS') 
+ 		order by sales_idx
+ 	</select>
+ 	
+ 	<update id="salesnstockUpdate" parameterType="m_dashboard.SalesNStockVO">
+ 		update salesnstock set day_total = #{day_total}, 
+ 			c1_m101=#{c1_m101}, c1_m102=#{c1_m102}, c1_m103=#{c1_m103}, c1_m104=#{c1_m104}, c1_m105=#{c1_m105}, c1_m106=#{c1_m106}, c1_m107=#{c1_m107}, c1_m108=#{c1_m108}, 
+ 		    c2_m201=#{c2_m201}, c2_m202=#{c2_m202}, c2_m203=#{c2_m203}, c2_m204=#{c2_m204}, c2_m205=#{c2_m205}, c2_m206=#{c2_m206}, c2_m207=#{c2_m207}, c2_m208=#{c2_m208}, 
+ 		    c3_m301=#{c3_m301}, c3_m302=#{c3_m302}, c3_m303=#{c3_m303}, c3_m304=#{c3_m304}, c3_m305=#{c3_m305}, c3_m306=#{c3_m306}, c3_m307=#{c3_m307}, c3_m308=#{c3_m308}, 
+ 		    c4_m401=#{c4_m401}, c4_m402=#{c4_m402}, c4_m403=#{c4_m403}, c4_m404=#{c4_m404}, c4_m405=#{c4_m405}, c4_m406=#{c4_m406}, c4_m407=#{c4_m407}, c4_m408=#{c4_m408}, 
+ 		    c5_m501=#{c5_m501}, c5_m502=#{c5_m502}, c5_m503=#{c5_m503}, c5_m504=#{c5_m504}, c5_m505=#{c5_m505}, c5_m506=#{c5_m506}, c5_m507=#{c5_m507}, c5_m508=#{c5_m508}
+ 		where sales_idx = #{sales_idx}
+ 	</update>
+ 	
+ 	<select id="menuAll" resultType="c_menu.MenuVO">
+ 		select m_id, c_id, m_name, price from menu order by m_id
+ 	</select>
+ 	
+ 	<select id="menuOne" parameterType="String" resultType="c_menu.MenuVO">
+ 		select m_name, price from menu where m_id = #{m_id}
+ 	</select>
+ 	
+ 	<select id="categoryList" resultType="c_menu.CategoryVO">
+ 		select * from category order by c_id
+ 	</select>
+ 	
+ 	<select id="categoryList1" parameterType="int" resultType="c_menu.CategoryVO"> 
+ 		select * from category where c_id = #{c_id} order by c_name
+ 	</select> 
+ 	
+ 	<select id="categoryId" parameterType="String" resultType="int">
+ 		select c_id from category where c_name=#{c_name}
+ 	</select>
+ 	
+ 	<select id="menuOne1" parameterType="String" resultType="c_menu.CategoryVO">
+ 		select c_name from category where c_id =#{c_id}
+ 	</select>
+ 	
+ 	<select id="menuList" parameterType="int" resultType="c_menu.MenuVO"> 
+ 		select * from menu where c_id = #{c_id} order by m_id
+ 	</select>
+ 	
+ 	<insert id="menuIns" parameterType="c_menu.MenuVO">
+      insert into menu(m_id, c_id, m_name, price, image) 
+               values (#{m_id}, #{c_id}, #{m_name}, #{price}, #{image})
+    </insert>
+    
+    <insert id="menuIns2" parameterType="c_menu.CategoryVO">
+ 		insert into category(c_id, c_name)
+ 					values (#{c_id}, #{c_name})
+ 	</insert>
+   
+    <delete id="menuDel" parameterType="String">
+       delete from menu where m_id = #{m_id}
+    </delete>
+    
+    <delete id="menuDel1" parameterType="String">
+ 		delete from category where c_id = #{c_id} 
+ 	</delete>
+       
+    <update id="menuUpdate" parameterType="c_menu.MenuVO">  
+       update menu set m_name = #{m_name}, price = #{price}, image = #{image} where m_id = #{m_id }     
+    </update>
+    
+    <update id="menuUpdate1" parameterType="c_menu.MenuVO">  
+ 		update menu set m_name = #{m_name} where m_id = #{m_id}	
+ 	</update> 
+ 	
+	<update id="menuUpdate2" parameterType="c_menu.MenuVO">  
+ 		update menu set price = #{price} where m_id = #{m_id}	
+ 	</update>
+ 	
+	<update id="menuUpdate3" parameterType="c_menu.MenuVO">  
+ 		update menu set image = #{image} where m_id = #{m_id}	
+  	</update> 
+ 	 	
+	<update id="menuUpdate4" parameterType="c_menu.CategoryVO">
+ 	 	update  category set c_name = #{c_name} where c_id = #{c_id}	 
+ 	</update>
+ 	 
+	<select id="idchk" resultType="int" parameterType="int"> <!-- 유심히 볼것  -->
+     	select count(*) from menu where m_id = #{m_id}
+    </select> 
+    
+    <select id="idchk2" resultType="int" parameterType="int">	 
+		select count(*) from category where c_id = #{c_id} 
+	</select>
+    
+	<!-- 입력받은 아이디 정보로 해당 테이블 정보를 가져오는 쿼리 -->
+    <select id="loginOne" parameterType="String"
+		resultType="m_login.ManagerVO">
+		select * from manager where id=#{id}
+	</select>
+
+	<!-- id/pw check 결과가 1 이상인 경우에 로그인 가넝 -->
+	<select id="loginChk" parameterType="String" resultType="int">
+		select
+		count(*) from manager where id=#{id}
+	</select>
+
+	<!-- 쓸데 없음^^ <select id="pwChk" parameterType="String" resultType="int"> 
+		select count(*) from manager where pw=#{pw} </select> -->
+	<select id="logInforSelect" resultType="m_login.LogInfoVO">
+		select * from LOGINFO
+	</select>
+
+	<!-- 로그인 로그아웃 정보 기록하는 쿼리 -->
+	<insert id="logInfoIns" parameterType="m_login.LogInfoVO">
+		insert into LOGINFO(log_idx, log_type, log_date)
+		values (log_idx.nextval, #{log_type}, SYSDATE)
+	</insert>
+	
+	<!-- DB의 최근 로그인 시간/날짜정보를 가져오는 쿼리 -->
+	<select id="loginDateAll" resultType="String">
+	select To_Char(log_date, 'YYYY-MM-DD HH24:MI:SS') from LOGINFO where log_idx = ( select max(log_idx) from LOGINFO where log_type in ('login'))
+	</select>
+	
+	<!-- DB의 최근 로그아웃 시간/날짜정보를 가져오는 쿼리 -->
+	<select id="logoutDateAll" resultType="String">
+	select To_Char(log_date, 'YYYY-MM-DD HH24:MI:SS') from LOGINFO where log_idx = ( select max(log_idx) from LOGINFO where log_type in ('logout'))
+	</select> 
+    
+    <!-- 로그아웃 기록이 있는지 확인하는 쿼리 -->
+	<select id="logoutChk"  resultType="int"> 
+		select count(*) from LOGINFO where log_type='logout'
+	</select>
+    
+</mapper>

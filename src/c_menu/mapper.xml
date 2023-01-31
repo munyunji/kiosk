@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="menu">
+ <!--
+ 	id는 중복안됨, 반드시 존재해야 한다. 
+	<select id="" resultType="" parameterType=""></select>	
+	<select id="" resultType=""></select>	
+	<update id="" parameterType=""></update>	
+	<insert id="" parameterType=""></insert>	
+	<delete id="" parameterType=""></delete>
+ -->
+ 
+ 	<!-- 전체 카테고리 내용을 받음 -->
+ 	<select id="categoryList" resultType="c_menu.CategoryVO">
+ 		select * from category order by c_id
+ 	</select>
+ 	
+ 	<!-- 카테고리 이름에 해당하는 카테고리 아이디 (c_id)를 받음 -->
+ 	<select id="categoryId" parameterType="String" resultType="int">
+ 		select c_id from category where c_name=#{c_name}
+ 	</select>
+ 
+ 	<!-- 카테고리 아이디에 해당하는 전체 메뉴를 받음 -->
+ 	<select id="menuList" parameterType="int" resultType="c_menu.MenuVO">
+ 		select * from menu where c_id = #{c_id} order by m_id
+ 	</select>
+ 	
+ 	<!-- 전체리스트 받아오는 쿼리 -->
+	<select id="allLisst" resultType="c_basketlist.PointVO">
+		select * from point
+	</select>
+	
+	<!-- 번호로 검색해 point 테이블의 정보를 받아오는 쿼리 -->
+	<select id="pointOne" parameterType="String"
+		resultType="c_basketlist.PointVO">
+		select * from point where phone=#{phone}
+	</select>
+	
+	<!-- 받은 번호 중복체크하는 쿼리 /결과==0 => 중복없음 /결과>0 => 중복되는 번호/ -->
+	<select id="phoneNumChk" parameterType="String" resultType="int">
+		<!-- 집계함수 count가 들어가 결과가 int로 나온다 -->
+		select count(*) from point where phone=#{phone}
+	</select>
+	
+	<!-- 새로 입력받은 전화번호와 쌓인 포인트를 DB에 집어넣는 쿼리 -->
+	<insert id="phoneNumIns" parameterType="c_basketlist.PointVO">
+		insert into point(phone, point) values (#{phone},#{point})
+	</insert>
+	
+	<!-- 번호가 이미 있는경우 포인트 컬럼을 원래 있던 포인트에 
+		새로운 포인트를 더한 값으로 업데이트 시킨다.-->
+	<update id="pointUpdate" parameterType="c_basketlist.PointVO">
+		update point set point=#{point} where phone=#{phone} 
+	</update>
+
+</mapper>
